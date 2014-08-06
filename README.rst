@@ -30,7 +30,7 @@ Directory structure
 ===============  =======================================================================
 Directory        Contents
 ===============  =======================================================================
-``./``           This README file, utility scripts, D:YAML sources outside any packages.
+``./``           This README file, license, DUB package file.
 ``./source``     Source code.
 ===============  =======================================================================
 

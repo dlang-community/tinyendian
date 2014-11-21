@@ -22,6 +22,21 @@ enum UTFEncoding : ubyte
     UTF_32
 }
 
+unittest
+{
+    const ints = [314, -101];
+    int[2] intsSwapBuffer = ints;
+    swapByteOrder(intsSwapBuffer[]);
+    swapByteOrder(intsSwapBuffer[]);
+    assert(ints == intsSwapBuffer, "Lost information when swapping byte order");
+
+    const floats = [3.14f, 10.1f];
+    float[2] floatsSwapBuffer = floats;
+    swapByteOrder(floatsSwapBuffer[]);
+    swapByteOrder(floatsSwapBuffer[]);
+    assert(floats == floatsSwapBuffer, "Lost information when swapping byte order");
+}
+
 @system pure nothrow @nogc:
 
 /// Swap byte order of items in an array in place.
@@ -43,7 +58,8 @@ void swapByteOrder(T)(T[] array)
         }
         else static if(T.sizeof == 4)
         {
-            item = bswap(cast(uint)item);
+            const swapped = bswap(*cast(uint*)&item);
+            item = *cast(const(T)*)&swapped;
         }
         else static assert(false, "Unsupported T: " ~ T.stringof);
     }

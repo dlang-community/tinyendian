@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" type="text/css" href="style.css"/>
+<script src="highlight.pack.js"></script>
+<title>tinyendian</title>
+<base href=""/>
+<script src="search.js"></script>
+<script src="show_hide.js"></script>
+</head>
+<body>
+<div class="main">
+<div class="breadcrumbs">
+<table id="results"></table>
+<a href="index.html" class="home">⌂</a><input type="search" id="search" placeholder="Search" onkeyup="searchSubmit(this.value, event)"/>
+<small>tinyendian</small>
+</div>
+<div class="sidebar">
+<a href="tinyendian.html#hide-toc" class="hide" id="hide-toc">&#171;</a>
+<a href="tinyendian.html#show-toc" class="show" id="show-toc">&#187;</a>
+<div id="toc-id" class="toc">
+<ul><li><span class=" selected"><a href="tinyendian.html">tinyendian</a></span>
+</li>
+
+</ul>
+</div></div>
+<div class="content">
+<div class="aggregate-symbol"><a class="anchor" id="swapByteOrder"></a><div class="symbol"><div class="description"><pre><code>public @system pure nothrow @nogc <a href="http://dlang.org/type.html#basic-data-types">void</a> <a href="tinyendian.html#swapByteOrder">swapByteOrder</a>(T)(T[] array) 
+if([2, 4].canFind(T.sizeof))
+</code></pre>
+<div class="section "><p>Swap byte order of items in an array in place.
+</p>
+
+
+</div>
+<div class="section"><h2>Parameters</h2>
+<table class="params">
+<tr class="param"><td class="paramName">T</td><td class="paramDoc"><p>Item type. Must be either 2 or 4 bytes long.
+</p>
+</td></tr>
+<tr class="param"><td class="paramName">array</td><td class="paramDoc"><p>Buffer with values to fix byte order of.
+</p>
+</td></tr>
+</table>
+</div>
+</div></div><a class="anchor" id="fixUTFByteOrder"></a><div class="symbol"><div class="description"><pre><code>public @system pure nothrow @nogc auto <a href="tinyendian.html#fixUTFByteOrder">fixUTFByteOrder</a>(<a href="http://dlang.org/type.html#basic-data-types">ubyte</a>[] array)
+</code></pre>
+<div class="section "><p>Convert byte order of an array encoded in UTF(8/16/32) to system endianness in place.
+</p>
+
+
+</div>
+<div class="section"><p>Uses the UTF byte-order-mark (BOM) to determine UTF encoding. If there is no BOM
+ at the beginning of array, UTF-8 is assumed (this is compatible with ASCII). The
+ BOM, if any, will be removed from the buffer.
+</p>
+<p> If the encoding is determined to be UTF-16 or UTF-32 and there aren't enough bytes
+ for the last code unit (i.e. if array.length is odd for UTF-16 or not divisible by
+ 4 for UTF-32), the extra bytes (1 for UTF-16, 1-3 for UTF-32) are stripped.
+</p>
+<p> Note that this function does <b>not</b> check if the array is a valid UTF string. It
+ only works with the BOM and 1,2 or 4-byte items.
+</p>
+
+
+</div>
+<div class="section"><h2>Parameters</h2>
+<table class="params">
+<tr class="param"><td class="paramName">array</td><td class="paramDoc"><p>The array with UTF-data.
+</p>
+</td></tr>
+</table>
+</div>
+<div class="section"><h2>Returns</h2>
+<p> A struct with the following members:
+</p>
+<p> <code class="d_inlinecode">ubyte[] array</code>            A slice of the input array containing data in correct
+                               byte order, without BOM and in case of UTF-16/UTF-32,
+                               without stripped bytes, if any.
+ <code class="d_inlinecode">UTFEncoding encoding</code>     Encoding of the result (UTF-8, UTF-16 or UTF-32)
+ <code class="d_inlinecode">std.system.Endian endian</code> Endianness of the original array.
+ <code class="d_inlinecode">uint bytesStripped</code>       Number of bytes stripped from a UTF-16/UTF-32 array, if
+                               any. This is non-zero only if array.length was not
+                               divisible by 2 or 4 for UTF-16 and UTF-32, respectively.
+</p>
+
+
+</div>
+<div class="section"><h2>Complexity</h2>
+<p> (BIGOH array.length)
+</p>
+
+
+</div>
+</div></div><div class="description"><div class="section "><p>A minimal library providing functionality for changing the endianness of data.
+</p>
+
+
+</div>
+</div><div class="section members"><h2>Enums</h2><table><tr><td><a href="tinyendian/UTFEncoding.html">UTFEncoding</a></td><td></td><td><p>Unicode UTF encodings.
+</p>
+</td></tr></table><h2>Functions</h2><table><tr><td><a href="tinyendian.html#swapByteOrder">swapByteOrder</a><span class="extrainfo"></span></td><td></td><td><p>Swap byte order of items in an array in place.
+</p>
+</td></tr><tr><td><span class="extrainfo"><span class="attribs"><span class="attr-auto">auto</span></span></span><a href="tinyendian.html#fixUTFByteOrder">fixUTFByteOrder</a><span class="extrainfo"></span></td><td></td><td><p>Convert byte order of an array encoded in UTF(8/16/32) to system endianness in place.
+</p>
+</td></tr></table>
+</div>
+</div><script>hljs.initHighlightingOnLoad();</script>
+
+</div>
+<footer>
+Generated with <a href="https://github.com/kiith-sa/harbored-mod">harbored-mod</a>
+</footer>
+</div>
+</body>
+</html>

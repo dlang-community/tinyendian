@@ -39,12 +39,13 @@ unittest
 
 @system pure nothrow @nogc:
 
-/// Swap byte order of items in an array in place.
-///
-/// Params:
-///
-/// T     = Item type. Must be either 2 or 4 bytes long.
-/// array = Buffer with values to fix byte order of.
+/** Swap byte order of items in an array in place.
+ *
+ * Params:
+ *
+ * T     = Item type. Must be either 2 or 4 bytes long.
+ * array = Buffer with values to fix byte order of.
+ */
 void swapByteOrder(T)(T[] array)
     if([2, 4].canFind(T.sizeof))
 {
@@ -65,39 +66,38 @@ void swapByteOrder(T)(T[] array)
     }
 }
 
-/// Convert byte order of an array encoded in UTF(8/16/32) to system endianness in
-/// place.
-///
-/// Uses the UTF byte-order-mark (BOM) to determine UTF encoding. If there is no BOM
-/// at the beginning of array, UTF-8 is assumed (this is compatible with ASCII). The
-/// BOM, if any, will be removed from the buffer.
-///
-/// If the encoding is determined to be UTF-16 or UTF-32 and there aren't enough bytes
-/// for the last code unit (i.e. if array.length is odd for UTF-16 or not divisible by
-/// 4 for UTF-32), the extra bytes (1 for UTF-16, 1-3 for UTF-32) are stripped.
-///
-/// Note that this function does $(B not) check if the array is a valid UTF string. It
-/// only works with the BOM and 1,2 or 4-byte items.
-///
-/// Params:
-///
-/// array = The array with UTF-data.
-///
-/// Returns:
-///
-/// A struct with the following members:
-///
-/// $(D ubyte[] array)            A slice of the input array containing data in correct
-///                               byte order, without BOM and in case of UTF-16/UTF-32,
-///                               without stripped bytes, if any.
-/// $(D UTFEncoding encoding)     Encoding of the result (UTF-8, UTF-16 or UTF-32)
-/// $(D std.system.Endian endian) Endianness of the original array.
-/// $(D uint bytesStripped)       Number of bytes stripped from a UTF-16/UTF-32 array,
-///                               if any. This is non-zero only if array.length was not
-///                               divisible by 2 or 4 for UTF-16 and UTF-32,
-///                               respectively.
-///
-/// Complexity: (BIGOH array.length)
+/** Convert byte order of an array encoded in UTF(8/16/32) to system endianness in place.
+ *
+ * Uses the UTF byte-order-mark (BOM) to determine UTF encoding. If there is no BOM
+ * at the beginning of array, UTF-8 is assumed (this is compatible with ASCII). The
+ * BOM, if any, will be removed from the buffer.
+ *
+ * If the encoding is determined to be UTF-16 or UTF-32 and there aren't enough bytes
+ * for the last code unit (i.e. if array.length is odd for UTF-16 or not divisible by
+ * 4 for UTF-32), the extra bytes (1 for UTF-16, 1-3 for UTF-32) are stripped.
+ *
+ * Note that this function does $(B not) check if the array is a valid UTF string. It
+ * only works with the BOM and 1,2 or 4-byte items.
+ *
+ * Params:
+ *
+ * array = The array with UTF-data.
+ *
+ * Returns:
+ *
+ * A struct with the following members:
+ *
+ * $(D ubyte[] array)            A slice of the input array containing data in correct
+ *                               byte order, without BOM and in case of UTF-16/UTF-32,
+ *                               without stripped bytes, if any.
+ * $(D UTFEncoding encoding)     Encoding of the result (UTF-8, UTF-16 or UTF-32)
+ * $(D std.system.Endian endian) Endianness of the original array.
+ * $(D uint bytesStripped)       Number of bytes stripped from a UTF-16/UTF-32 array, if
+ *                               any. This is non-zero only if array.length was not
+ *                               divisible by 2 or 4 for UTF-16 and UTF-32, respectively.
+ *
+ * Complexity: (BIGOH array.length)
+ */
 auto fixUTFByteOrder(ubyte[] array)
 {
     // Enumerates UTF BOMs, matching indices to byteOrderMarks/bomEndian.

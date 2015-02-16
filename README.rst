@@ -54,7 +54,8 @@ project.
 
 TinyEndian requires DMD 2.066 or equivalent GDC/LDC.
 
-Open ``source/tinyendian.d`` to read the API documentation.
+`API documentation <http://ddocs.org/tinyendian/latest/index.html>`_ can be found at
+`DDocs.org <http://ddocs.org>`_.
 
 
 -------

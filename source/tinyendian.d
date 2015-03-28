@@ -13,6 +13,8 @@ import std.algorithm;
 import std.system;
 import std.utf;
 
+static if(__VERSION__ < 2066)
+    private enum nogc;
 
 /// Unicode UTF encodings.
 enum UTFEncoding : ubyte
@@ -37,7 +39,7 @@ unittest
     assert(floats == floatsSwapBuffer, "Lost information when swapping byte order");
 }
 
-@system pure nothrow @nogc:
+@nogc @system pure nothrow:
 
 /** Swap byte order of items in an array in place.
  *

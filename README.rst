@@ -2,9 +2,10 @@
 TinyEndian
 ==========
 
-.. image:: https://travis-ci.org/kiith-sa/tinyendian.svg?branch=master
-.. image:: https://raw.githubusercontent.com/kiith-sa/tinyendian/master/code.dlang.org-shield.png
-   :target: http://code.dlang.org
+.. image:: https://travis-ci.org/dlang-community/tinyendian.svg?branch=master
+   :target: https://travis-ci.org/dlang-community/tinyendian
+.. image:: https://img.shields.io/dub/v/tinyendian.svg
+   :target: http://code.dlang.org/packages/tinyendian
 
 ------------
 Introduction

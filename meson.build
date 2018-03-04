@@ -25,3 +25,9 @@ pkgc.generate(name: 'tinyendian',
               version: project_version,
               description: 'Lightweight endianness library for D.'
 )
+
+# Make Tinyendian easy to use as subproject
+tinyendian_dep = declare_dependency(
+    link_with: tinyendian_lib,
+    include_directories: [src_dir]
+)

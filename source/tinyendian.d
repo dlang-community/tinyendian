@@ -6,11 +6,7 @@
 /// A minimal library providing functionality for changing the endianness of data.
 module tinyendian;
 
-import std.system;
-import std.utf;
-
-static if(__VERSION__ < 2066)
-    private enum nogc;
+import std.system : Endian, endian;
 
 /// Unicode UTF encodings.
 enum UTFEncoding : ubyte
@@ -123,7 +119,7 @@ auto fixUTFByteOrder(ubyte[] array) @safe @nogc pure nothrow
                                                    [0xFE, 0xFF],
                                                    [0xFF, 0xFE, 0x00, 0x00],
                                                    [0x00, 0x00, 0xFE, 0xFF] ];
-    static immutable Endian[5] bomEndian = [ std.system.endian,
+    static immutable Endian[5] bomEndian = [ endian,
                                              Endian.littleEndian,
                                              Endian.bigEndian,
                                              Endian.littleEndian, 
@@ -173,7 +169,7 @@ auto fixUTFByteOrder(ubyte[] array) @safe @nogc pure nothrow
     }
 
     // We enforce above that array.length is divisible by 2/4 for UTF-16/32
-    if (std.system.endian != result.endian)
+    if (endian != result.endian)
     {
         if (result.encoding == UTFEncoding.UTF_16)
             swapByteOrder(cast(wchar[])array);

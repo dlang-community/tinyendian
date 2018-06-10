@@ -6,10 +6,6 @@
 /// A minimal library providing functionality for changing the endianness of data.
 module tinyendian;
 
-
-import core.stdc.string;
-
-import std.algorithm;
 import std.system;
 import std.utf;
 
@@ -23,8 +19,8 @@ enum UTFEncoding : ubyte
     UTF_16,
     UTF_32
 }
-
-unittest
+///
+@safe unittest
 {
     const ints = [314, -101];
     int[2] intsSwapBuffer = ints;
@@ -39,8 +35,6 @@ unittest
     assert(floats == floatsSwapBuffer, "Lost information when swapping byte order");
 }
 
-@nogc @system pure nothrow:
-
 /** Swap byte order of items in an array in place.
  *
  * Params:
@@ -48,24 +42,34 @@ unittest
  * T     = Item type. Must be either 2 or 4 bytes long.
  * array = Buffer with values to fix byte order of.
  */
-void swapByteOrder(T)(T[] array)
-    if([2, 4].canFind(T.sizeof))
+void swapByteOrder(T)(T[] array) @trusted @nogc pure nothrow
+if (T.sizeof == 2 || T.sizeof == 4)
 {
-    import core.bitop;
     // Swap the byte order of all read characters.
-    foreach(ref item; array)
+    foreach (ref item; array)
     {
-        static if(T.sizeof == 2)
+        static if (T.sizeof == 2)
         {
+            import std.algorithm.mutation : swap;
             swap(*cast(ubyte*)&item, *(cast(ubyte*)&item + 1));
         }
-        else static if(T.sizeof == 4)
+        else static if (T.sizeof == 4)
         {
+            import core.bitop : bswap;
             const swapped = bswap(*cast(uint*)&item);
             item = *cast(const(T)*)&swapped;
         }
         else static assert(false, "Unsupported T: " ~ T.stringof);
     }
+}
+
+/// See fixUTFByteOrder.
+struct FixUTFByteOrderResult
+{
+    ubyte[] array;
+    UTFEncoding encoding;
+    Endian endian;
+    uint bytesStripped = 0;
 }
 
 /** Convert byte order of an array encoded in UTF(8/16/32) to system endianness in place.
@@ -100,7 +104,7 @@ void swapByteOrder(T)(T[] array)
  *
  * Complexity: (BIGOH array.length)
  */
-auto fixUTFByteOrder(ubyte[] array)
+auto fixUTFByteOrder(ubyte[] array) @safe @nogc pure nothrow
 {
     // Enumerates UTF BOMs, matching indices to byteOrderMarks/bomEndian.
     enum BOM: ubyte
@@ -126,23 +130,17 @@ auto fixUTFByteOrder(ubyte[] array)
                                              Endian.bigEndian ];
 
     // Documented in function ddoc.
-    struct Result
-    {
-        ubyte[] array;
-        UTFEncoding encoding;
-        Endian endian;
-        uint bytesStripped = 0;
-    }
-    Result result;
+
+    FixUTFByteOrderResult result;
 
     // Detect BOM, if any, in the bytes we've read. -1 means no BOM.
     // Need the last match: First 2 bytes of UTF-32LE BOM match the UTF-16LE BOM. If we
     // used the first match, UTF-16LE would be detected when we have a UTF-32LE BOM.
+    import std.algorithm.searching : startsWith;
     BOM bomId = BOM.None;
-    foreach(i, bom; byteOrderMarks) if(array.startsWith(bom))
-    {
-        bomId = cast(BOM)i;
-    }
+    foreach (i, bom; byteOrderMarks)
+        if (array.startsWith(bom))
+            bomId = cast(BOM)i;
 
     result.endian = (bomId != BOM.None) ? bomEndian[bomId] : Endian.init;
 
@@ -168,21 +166,52 @@ auto fixUTFByteOrder(ubyte[] array)
             break;
     }
 
-    array = array[0 .. $ - result.bytesStripped];
     // If there's a BOM, we need to move data back to ensure it starts at array[0]
-    if(start != 0)
+    if (start != 0)
     {
-        core.stdc.string.memmove(array.ptr, array.ptr + start, array.length - start);
-        array = array[0 .. $ - start];
+        array = array[start .. $  - result.bytesStripped];
     }
 
     // We enforce above that array.length is divisible by 2/4 for UTF-16/32
-    if(std.system.endian != result.endian)
+    if (std.system.endian != result.endian)
     {
-        if(result.encoding == UTFEncoding.UTF_16)      { swapByteOrder(cast(wchar[])array); }
-        else if(result.encoding == UTFEncoding.UTF_32) { swapByteOrder(cast(dchar[])array); }
+        if (result.encoding == UTFEncoding.UTF_16)
+            swapByteOrder(cast(wchar[])array);
+        else if (result.encoding == UTFEncoding.UTF_32)
+            swapByteOrder(cast(dchar[])array);
     }
 
     result.array = array;
     return result;
+}
+///
+@safe unittest
+{
+    {
+        ubyte[] s = [0xEF, 0xBB, 0xBF, 'a'];
+        FixUTFByteOrderResult r = fixUTFByteOrder(s);
+        assert(r.encoding == UTFEncoding.UTF_8);
+        assert(r.array.length == 1);
+        assert(r.array == ['a']);
+        assert(r.endian == Endian.littleEndian);
+    }
+
+    {
+        ubyte[] s = ['a'];
+        FixUTFByteOrderResult r = fixUTFByteOrder(s);
+        assert(r.encoding == UTFEncoding.UTF_8);
+        assert(r.array.length == 1);
+        assert(r.array == ['a']);
+        assert(r.endian == Endian.bigEndian);
+    }
+
+    {
+        // strip 'a' b/c not complete unit
+        ubyte[] s = [0xFE, 0xFF, 'a'];
+        FixUTFByteOrderResult r = fixUTFByteOrder(s);
+        assert(r.encoding == UTFEncoding.UTF_16);
+        assert(r.array.length == 0);
+        assert(r.endian == Endian.bigEndian);
+    }
+
 }

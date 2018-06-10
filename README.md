@@ -1,9 +1,7 @@
 TinyEndian
 ==========
 
-[![image]]
-
-[![image][1]]
+![](https://travis-ci.org/dlang-community/tinyendian.svg?branch=master) ![](https://img.shields.io/dub/v/tinyendian.svg)
 
 Introduction
 ------------
@@ -11,7 +9,7 @@ Introduction
 TinyEndian is a minimal endianness library for the D programming
 language. It has no external dependencies, it only needs a D compiler
 and Phobos (standard library). TinyEndian doesn't allocate memory and is
-fully **@nogc** to allow use in high-performance code.
+fully `@nogc` to allow use in high-performance code.
 
 The API is not stable and may change in the future.
 
@@ -36,24 +34,22 @@ Directory structure
 Usage
 -----
 
-Assuming you use [dub], add this line:
+Assuming you use [dub](http://code.dlang.org/about), add this line:
 
-    "tinyendian": { "version" : "~>0.1.0" }
+    "tinyendian": { "version" : "~>0.2.0" }
 
 to the `"dependencies"` in your project's `dub.json`.
 
 If you don't use dub, you can directly copy the `source/tinyendian.d`
 file into your project.
 
-TinyEndian requires DMD 2.066 or equivalent GDC/LDC.
-
-[API documentation] can be found at [DDocs.org].
+TinyEndian requires DMD 2.067 or better.
 
 License
 -------
 
-TinyEndian is released under the terms of the [Boost Software License
-1.0]. This license allows you to use the source code in your own
+TinyEndian is released under the terms of the Boost Software License
+1.0. This license allows you to use the source code in your own
 projects, open source or proprietary, and to modify it to suit your
 needs. However, in source distributions, you have to preserve the
 license headers in the source code and the accompanying license file.
@@ -73,12 +69,4 @@ also displayed here:
     The copyright notices in the Software and this entire statement, including
     the above license grant, this restriction and the following disclaimer,
 
-  [image]: https://travis-ci.org/dlang-community/tinyendian.svg?branch=master
-  [![image]]: https://travis-ci.org/dlang-community/tinyendian
-  [1]: https://img.shields.io/dub/v/tinyendian.svg
-  [![image][1]]: http://code.dlang.org/packages/tinyendian
-  [dub]: http://code.dlang.org/about
-  [API documentation]: http://ddocs.org/tinyendian/~master/index.html
-  [DDocs.org]: http://ddocs.org
-  [Boost Software License 1.0]: http://www.boost.org/LICENSE_1_0.txt
 

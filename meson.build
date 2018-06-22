@@ -1,6 +1,6 @@
 project('tinyendian', 'd',
     meson_version: '>=0.40',
-    version: '0.1.2'
+    version: '0.2.0'
 )
 
 project_soversion    = '0'

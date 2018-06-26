@@ -13,10 +13,12 @@ tinyendian_src = [
 ]
 install_headers(tinyendian_src, subdir: 'd/')
 
-tinyendian_lib = static_library('tinyendian',
+tinyendian_lib = library('tinyendian',
         [tinyendian_src],
         include_directories: [src_dir],
         install: true,
+        version: meson.project_version(),
+        soversion: project_soversion,
         pic: true
 )
 pkgc.generate(name: 'tinyendian',

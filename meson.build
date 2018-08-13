@@ -1,9 +1,12 @@
-project('tinyendian', 'd',
-    meson_version: '>=0.40',
-    version: '0.2.0'
-)
+# -*- mode: python; -*-
 
-project_soversion    = '0'
+project(
+    'tinyendian',
+    'd',
+    meson_version: '>=0.41',
+    version: '0.2.0',
+    default_options: ['buildtype=release'],
+)
 
 src_dir = include_directories('source/')
 pkgc = import('pkgconfig')
@@ -11,21 +14,23 @@ pkgc = import('pkgconfig')
 tinyendian_src = [
     'source/tinyendian.d'
 ]
+
 install_headers(tinyendian_src, subdir: 'd/')
 
-tinyendian_lib = library('tinyendian',
-        [tinyendian_src],
-        include_directories: [src_dir],
-        install: true,
-        version: meson.project_version(),
-        soversion: project_soversion,
-        pic: true
+tinyendian_lib = library(
+    meson.project_name(),
+    [tinyendian_src],
+    include_directories: [src_dir],
+    soversion: '0',
+    install: true,
 )
-pkgc.generate(name: 'tinyendian',
-              libraries: tinyendian_lib,
-              subdirs: 'd/',
-              version: meson.project_version(),
-              description: 'Lightweight endianness library for D.'
+
+pkgc.generate(
+    name: meson.project_name(),
+    libraries: tinyendian_lib,
+    subdirs: 'd/',
+    version: meson.project_version(),
+    description: 'Lightweight endianness library for D.'
 )
 
 # Make Tinyendian easy to use as subproject

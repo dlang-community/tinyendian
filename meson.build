@@ -21,7 +21,8 @@ tinyendian_lib = library(
     meson.project_name(),
     [tinyendian_src],
     include_directories: [src_dir],
-    soversion: '0',
+    version: meson.project_version(),
+    pic: true,
     install: true,
 )
 

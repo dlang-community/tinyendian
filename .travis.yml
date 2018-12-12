@@ -11,6 +11,10 @@ d:
  #- dmd-nightly
  - ldc
  #- ldc-beta
+ 
+branches:
+  only:
+    - master
 
 before_install:
   - pyenv install 3.6.3  

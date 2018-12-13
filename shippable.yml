@@ -1,0 +1,14 @@
+language: none
+
+build:
+    ci:
+        - wget http://downloads.dlang.org/releases/2.x/2.083.1/dmd_2.083.1-0_amd64.deb && sudo dpkg -i dmd_2.083.1-0_amd64.deb
+        - dmd --version
+        - sudo apt-get update && sudo apt-get -y install python3-pip
+        - python3 --version && pip3 --version
+        - pip3 install 'meson==0.48.2'
+        - mkdir .ntmp && curl -L https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip -o .ntmp/ninja-linux.zip && unzip .ntmp/ninja-linux.zip -d .ntmp
+        - export PATH=$PATH:$PWD/.ntmp
+        - meson build && ninja -C build
+        - ninja -C build test -v
+        - dub build && dub test

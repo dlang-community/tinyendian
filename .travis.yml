@@ -7,13 +7,9 @@ os:
  - osx
 d:
  - dmd
- #- dmd-beta
- #- dmd-nightly
  - ldc
- #- ldc-beta
 
 before_install:
-  # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt update; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install python3-pip python3-setuptools; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 install 'meson==0.48.2'; fi  
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
